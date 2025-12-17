@@ -14,7 +14,7 @@ function App() {
     name: "",
     description: "",
     price: "",
-    quantity: "",
+    amount: "",
   });
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
@@ -102,7 +102,7 @@ function App() {
       let bVal = b[sortField];
       
       // Handle numeric fields
-      if (sortField === "id" || sortField === "price" || sortField === "quantity") {
+      if (sortField === "id" || sortField === "price" || sortField === "amount") {
         aVal = Number(aVal);
         bVal = Number(bVal);
       } else {
@@ -124,7 +124,7 @@ function App() {
 
   // Reset form
   const resetForm = () => {
-    setForm({ id: "", name: "", description: "", price: "", quantity: "" });
+    setForm({ id: "", name: "", description: "", price: "", amount: "" });
     setEditId(null);
   };
 
@@ -140,7 +140,7 @@ function App() {
           ...form,
           id: Number(form.id),
           price: Number(form.price),
-          quantity: Number(form.quantity),
+          amount: Number(form.amount),
         });
         setMessage("Product updated successfully");
       } else {
@@ -148,7 +148,7 @@ function App() {
           ...form,
           id: Number(form.id),
           price: Number(form.price),
-          quantity: Number(form.quantity),
+          amount: Number(form.amount),
         });
         setMessage("Product created successfully");
       }
@@ -167,7 +167,7 @@ function App() {
       name: product.name,
       description: product.description,
       price: product.price,
-      quantity: product.quantity,
+      amount: product.amount,
     });
     setEditId(product.id);
     setMessage("");
@@ -199,7 +199,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-badge">📦</span>
-          <h1>Telusko Trac</h1>
+          <h1>TestFE</h1>
         </div>
         <div className="top-actions">
           <button className="btn btn-light" onClick={fetchProducts} disabled={loading}>
@@ -261,9 +261,9 @@ function App() {
               />
               <input
                 type="number"
-                name="quantity"
-                placeholder="Quantity"
-                value={form.quantity}
+                name="amount"
+                placeholder="Amount"
+                value={form.amount}
                 onChange={handleChange}
                 required
               />
@@ -321,10 +321,10 @@ function App() {
                         Price
                       </th>
                       <th 
-                        className={`sortable ${sortField === 'quantity' ? `sort-${sortDirection}` : ''}`}
-                        onClick={() => handleSort('quantity')}
+                        className={`sortable ${sortField === 'amount' ? `sort-${sortDirection}` : ''}`}
+                        onClick={() => handleSort('amount')}
                       >
-                        Quantity
+                        Amount
                       </th>
                       <th>Actions</th>
                     </tr>
@@ -337,7 +337,7 @@ function App() {
                         <td className="desc-cell" title={p.description}>{p.description}</td>
                         <td className="price-cell">${currency(p.price)}</td>
                         <td>
-                          <span className="qty-badge">{p.quantity}</span>
+                          <span className="qty-badge">{p.amount}</span>
                         </td>
                         <td>
                           <div className="row-actions">
