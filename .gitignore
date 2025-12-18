@@ -1,12 +1,7 @@
 # Python
 __pycache__/
-myenv
+myenv/
 
 # Node / React
 node_modules/
 frontend/node_modules/
-frontend/node_modules/.cache/
-
-# OS
-.DS_Store
-Thumbs.db
