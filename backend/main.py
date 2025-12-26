@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from models import Product
-from database import SessionLocal, engine
-import database_models
+from backend.models import Product
+from backend.database import SessionLocal, engine
+import backend.database_models
 from sqlalchemy.orm import Session
 
 app = FastAPI()
@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-database_models.Base.metadata.create_all(bind=engine)
+backend.database_models.Base.metadata.create_all(bind=engine)
 
 products = [
     Product(
@@ -49,10 +49,10 @@ def get_db():
 def init_db():
     db = SessionLocal()
     try:
-        count = db.query(database_models.Product).count()
+        count = db.query(backend.database_models.Product).count()
         if count == 0:
             for product in products:
-                db.add(database_models.Product(**product.model_dump()))
+                db.add(backend.database_models.Product(**product.model_dump()))
             db.commit()
     finally:
         db.close()
@@ -63,15 +63,15 @@ init_db()
 
 @app.get("/products/")
 def get_all_products_db(db: Session = Depends(get_db)):
-    db_products = db.query(database_models.Product).all()
+    db_products = db.query(backend.database_models.Product).all()
     return db_products
 
 
 @app.get("/products/{product_id}")
 def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
     db_product = (
-        db.query(database_models.Product)
-        .filter(database_models.Product.id == product_id)
+        db.query(backend.database_models.Product)
+        .filter(backend.database_models.Product.id == product_id)
         .first()
     )
     if not db_product:
@@ -81,7 +81,7 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 
 @app.post("/products/")
 def add_product_db(product: Product, db: Session = Depends(get_db)):
-    db_product = database_models.Product(**product.model_dump())
+    db_product = backend.database_models.Product(**product.model_dump())
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
@@ -91,8 +91,8 @@ def add_product_db(product: Product, db: Session = Depends(get_db)):
 @app.put("/products/{product_id}")
 def update_product_db(product_id: int, updated_product: Product, db: Session = Depends(get_db)):
     db_product = (
-        db.query(database_models.Product)
-        .filter(database_models.Product.id == product_id)
+        db.query(backend.database_models.Product)
+        .filter(backend.database_models.Product.id == product_id)
         .first()
     )
     if db_product:
@@ -109,8 +109,8 @@ def update_product_db(product_id: int, updated_product: Product, db: Session = D
 @app.delete("/products/{product_id}")
 def delete_product_db(product_id: int, db: Session = Depends(get_db)):
     db_product = (
-        db.query(database_models.Product)
-        .filter(database_models.Product.id == product_id)
+        db.query(backend.database_models.Product)
+        .filter(backend.database_models.Product.id == product_id)
         .first()
     )
     if db_product:
